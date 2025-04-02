@@ -48,7 +48,6 @@ public class MeetingServiceImpl implements MeetingService {
         meeting.setTimeSlot(meetingRequest.getTimeSlot());
         meeting.setCalendar(calendar);
 
-        //Add participants
         if (meetingRequest.getParticipantIds() != null && !meetingRequest.getParticipantIds().isEmpty()) {
             Set<Employee> participants = employeeRepository.findAllById(meetingRequest.getParticipantIds()).stream()
                     .collect(Collectors.toSet());
@@ -56,7 +55,6 @@ public class MeetingServiceImpl implements MeetingService {
         }
         meeting = meetingRepository.save(meeting);
 
-        // Add meeting to calendar
         calendar.getMeetings().add(meeting);
         calendarRepository.save(calendar);
         return meeting;
@@ -66,7 +64,6 @@ public class MeetingServiceImpl implements MeetingService {
     public Map<Long, List<Meeting>> findConflicts(MeetingRequest meetingRequest) {
         Map<Long, List<Meeting>> conflicts = new HashMap<>();
 
-        //Check organizer conflicts
         List<Meeting> organizerConflicts = meetingRepository.findOverlappingMeetings(
                 meetingRequest.getOrganizerId(),
                 meetingRequest.getTimeSlot().getStartTime(),
@@ -75,7 +72,6 @@ public class MeetingServiceImpl implements MeetingService {
             conflicts.put(meetingRequest.getOrganizerId(), organizerConflicts);
         }
 
-        // Check participant conflicts
         if (meetingRequest.getParticipantIds() != null) {
             for (Long participantId : meetingRequest.getParticipantIds()) {
                 List<Meeting> participantConflicts = meetingRepository.findOverlappingMeetings(

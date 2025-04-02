@@ -33,5 +33,4 @@ public class EmployeeController {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    // Additional employee-related endpoints can be added here
 }

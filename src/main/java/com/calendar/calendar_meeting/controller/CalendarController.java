@@ -32,5 +32,5 @@ public class CalendarController {
         return new ResponseEntity<>(freeSlots, HttpStatus.OK);
     }
 
-    // Additional calendar-related endpoints can be added here
+
 }

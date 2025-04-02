@@ -17,11 +17,11 @@ public class MeetingRequest {
     private String description;
 
     @NotNull(message = "TimeSlot cannot be null")
-    @Valid // Cascade validation to the TimeSlot object
+    @Valid
     private TimeSlot timeSlot;
 
     @NotNull(message = "Organizer ID cannot be null")
     private Long organizerId;
 
-    private Set<Long> participantIds; //Set of employee IDs
+    private Set<Long> participantIds;
 }

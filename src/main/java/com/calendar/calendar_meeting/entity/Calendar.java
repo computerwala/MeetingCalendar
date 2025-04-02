@@ -24,7 +24,7 @@ public class Calendar {
     private Employee employee;
 
     @OneToMany(mappedBy = "calendar", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference // Add JsonManagedReference for meetings
+    @JsonManagedReference
     private List<Meeting> meetings = new ArrayList<>();
 
     public void setEmployee(Employee employee) {

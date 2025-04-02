@@ -1,8 +1,9 @@
 //package com.calendar.calendar_meeting.service;
 //
+//import static org.junit.jupiter.api.Assertions.*;
+//import static org.mockito.Mockito.*;
+//
 //import com.calendar.calendar_meeting.entity.Employee;
-//import com.calendar.calendar_meeting.exception.CalendarException;
-//import com.calendar.calendar_meeting.impl.EmployeeServiceImpl;
 //import com.calendar.calendar_meeting.repository.EmployeeRepository;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
@@ -11,14 +12,12 @@
 //import org.mockito.Mock;
 //import org.mockito.junit.jupiter.MockitoExtension;
 //
+//import java.util.List;
 //import java.util.Optional;
-//
-//import static org.junit.jupiter.api.Assertions.*;
-//import static org.mockito.ArgumentMatchers.any;
-//import static org.mockito.Mockito.*;
+//import java.util.Arrays;
 //
 //@ExtendWith(MockitoExtension.class)
-//public class EmployeeServiceTest {
+//class EmployeeServiceTest {
 //
 //    @Mock
 //    private EmployeeRepository employeeRepository;
@@ -26,62 +25,66 @@
 //    @InjectMocks
 //    private EmployeeServiceImpl employeeService;
 //
-//    private Employee employee;
+//    private Employee sampleEmployee;
 //
 //    @BeforeEach
 //    void setUp() {
-//        employee = new Employee();
-//        employee.setId(1L);
-//        employee.setName("Test Employee");
-//        employee.setEmail("test@example.com");
+//        sampleEmployee = new Employee();
+//        sampleEmployee.setId(1L);
+//        sampleEmployee.setName("John Doe");
 //    }
 //
 //    @Test
-//    void createEmployee_ValidInput_ReturnsCreatedEmployee() {
-//        // Arrange
-//        when(employeeRepository.findByEmail(employee.getEmail())).thenReturn(Optional.empty());
-//        when(employeeRepository.save(any(Employee.class))).thenReturn(employee);
+//    void testFindEmployeeById_Success() {
+//        when(employeeRepository.findById(1L)).thenReturn(Optional.of(sampleEmployee));
 //
-//        // Act
-//        Employee createdEmployee = employeeService.createEmployee(employee);
+//        Employee foundEmployee = employeeService.findEmployeeById(1L);
 //
-//        // Assert
-//        assertNotNull(createdEmployee);
-//        assertEquals("Test Employee", createdEmployee.getName());
+//        assertNotNull(foundEmployee);
+//        assertEquals(1L, foundEmployee.getId());
+//        assertEquals("John Doe", foundEmployee.getName());
+//        verify(employeeRepository, times(1)).findById(1L);
 //    }
 //
 //    @Test
-//    void createEmployee_DuplicateEmail_ThrowsException() {
-//        // Arrange
-//        when(employeeRepository.findByEmail(employee.getEmail())).thenReturn(Optional.of(employee));
+//    void testFindEmployeeById_NotFound() {
+//        when(employeeRepository.findById(2L)).thenReturn(Optional.empty());
 //
-//        // Act/Assert
-//        assertThrows(CalendarException.class, () -> employeeService.createEmployee(employee));
+//        Employee foundEmployee = employeeService.findEmployeeById(2L);
+//
+//        assertNull(foundEmployee);
+//        verify(employeeRepository, times(1)).findById(2L);
 //    }
 //
 //    @Test
-//    void getEmployeeById_ExistingId_ReturnsEmployee() {
-//        // Arrange
-//        when(employeeRepository.findById(1L)).thenReturn(Optional.of(employee));
+//    void testSaveEmployee() {
+//        when(employeeRepository.save(any(Employee.class))).thenReturn(sampleEmployee);
 //
-//        // Act
-//        Optional<Employee> foundEmployee = employeeService.getEmployeeById(1L);
+//        Employee savedEmployee = employeeService.saveEmployee(sampleEmployee);
 //
-//        // Assert
-//        assertTrue(foundEmployee.isPresent());
-//        assertEquals("Test Employee", foundEmployee.get().getName());
+//        assertNotNull(savedEmployee);
+//        assertEquals("John Doe", savedEmployee.getName());
+//        verify(employeeRepository, times(1)).save(sampleEmployee);
 //    }
 //
 //    @Test
-//    void getEmployeeById_NonExistingId_ReturnsEmpty() {
-//        // Arrange
-//        when(employeeRepository.findById(1L)).thenReturn(Optional.empty());
+//    void testGetAllEmployees() {
+//        List<Employee> employees = Arrays.asList(sampleEmployee, new Employee(2L, "Jane Doe"));
+//        when(employeeRepository.findAll()).thenReturn(employees);
 //
-//        // Act
-//        Optional<Employee> foundEmployee = employeeService.getEmployeeById(1L);
+//        List<Employee> result = employeeService.getAllEmployees();
 //
-//        // Assert
-//        assertFalse(foundEmployee.isPresent());
+//        assertNotNull(result);
+//        assertEquals(2, result.size());
+//        verify(employeeRepository, times(1)).findAll();
+//    }
+//
+//    @Test
+//    void testDeleteEmployeeById() {
+//        doNothing().when(employeeRepository).deleteById(1L);
+//
+//        employeeService.deleteEmployeeById(1L);
+//
+//        verify(employeeRepository, times(1)).deleteById(1L);
 //    }
 //}
-//j

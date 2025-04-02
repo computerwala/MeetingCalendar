@@ -38,5 +38,4 @@ public class MeetingController {
         return new ResponseEntity<>(conflicts, HttpStatus.OK);
     }
 
-    // Additional meeting-related endpoints can be added here
 }

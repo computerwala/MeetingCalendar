@@ -26,17 +26,14 @@ public class CalendarServiceImpl implements CalendarService {
 
     @Override
     public List<TimeSlot> findFreeSlots(Long employeeId1, Long employeeId2, int durationMinutes) {
-        // Get meetings for both employees
         List<Meeting> meetings1 = meetingRepository.findByCalendarEmployeeId(employeeId1);
         List<Meeting> meetings2 = meetingRepository.findByCalendarEmployeeId(employeeId2);
 
-        // Combine and sort all busy slots
         List<TimeSlot> busySlots = new ArrayList<>();
         meetings1.forEach(meeting -> busySlots.add(meeting.getTimeSlot()));
         meetings2.forEach(meeting -> busySlots.add(meeting.getTimeSlot()));
         busySlots.sort(Comparator.comparing(TimeSlot::getStartTime));
 
-        // Define working hours (9 AM to 5 PM)
         LocalDate today = LocalDate.now();
         LocalDateTime workStart = LocalDateTime.of(today, LocalTime.of(9, 0));
         LocalDateTime workEnd = LocalDateTime.of(today, LocalTime.of(17, 0));
@@ -44,7 +41,6 @@ public class CalendarServiceImpl implements CalendarService {
         List<TimeSlot> freeSlots = new ArrayList<>();
         LocalDateTime currentTime = workStart;
 
-        // Find gaps between meetings
         for (TimeSlot busy : busySlots) {
             if (busy.getStartTime().isAfter(currentTime)) {
                 TimeSlot freeSlot = new TimeSlot(currentTime, busy.getStartTime());
@@ -58,7 +54,6 @@ public class CalendarServiceImpl implements CalendarService {
             }
         }
 
-        // Check for free slot at the end of the day
         if (currentTime.isBefore(workEnd)) {
             TimeSlot freeSlot = new TimeSlot(currentTime, workEnd);
             if (freeSlot.getDurationInMinutes() >= durationMinutes) {

@@ -28,7 +28,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     @Transactional
     public Employee createEmployee(Employee employee) {
-        // Check if employee with the same email already exists
         if (employeeRepository.findByEmail(employee.getEmail()).isPresent()) {
             throw new CalendarException("Employee with email " + employee.getEmail() + " already exists");
         }
@@ -38,8 +37,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         calendar.setEmployee(employee);
         employee.setCalendar(calendar);
 
-        employee = employeeRepository.save(employee); // Save the employee first
-        calendarRepository.save(calendar); // Save the calendar
+        employee = employeeRepository.save(employee);
+        calendarRepository.save(calendar);
 
         return employee;
     }
